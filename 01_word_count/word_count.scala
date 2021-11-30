@@ -17,7 +17,11 @@ val cleanWordRDD: RDD[String] = wordRDD.filter(word => !word.equals(""))
 val kvRDD: RDD[(String, Int)] = cleanWordRDD.map(word => (word,1))
 
 //按照单词做分组计数
-val wordCountRDD: RDD[(String, Int)] = kvRDD.reduceByKey(x, y) => x + y)
+val wordCountRDD: RDD[(String, Int)] = kvRDD.reduceByKey((x, y) => x + y)
 
 //打印词频最高的五个词汇
 wordCountRDD.map{case (k, v) => (v, k)}.sortByKey(false).take(5)
+
+// 将分组计数结果落盘到文件
+val targetPath: String = "."
+wordCounts.saveAsTextFile(targetPath)
